@@ -1,0 +1,4 @@
+{
+  "dbUri": "mongodb://dbadmin:3t2#4H9T7Sr8@ds125016.mlab.com:25016/salesforce-crud-db",
+  "jwtSecret": "m4k34p13!"
+}
