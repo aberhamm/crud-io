@@ -45,15 +45,15 @@ app.get("/*", function(req, res) {
   res.sendFile(__dirname + '/server/static/index.html')
 })
 
-const server = app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000 or http://127.0.0.1:3000');
+const port = process.env.PORT || 3000;
+
+const server = app.listen(port, () => {
+  console.log('Server is running on port ' + port);
 });
 
 const io = socket(server);
 io.on('connection', socket => {
-  console.log(socket.id);
   socket.on('donate', (data) => {
-    console.log(data);
     socket.broadcast.emit('donate', data);
   })
 });
