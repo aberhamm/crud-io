@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon --use-strict index.js",
-    "bundle": "webpack"
+    "start": "node index.js",
+    "watch": "webpack",
+    "watch-server": "nodemon --use-strict index.js"
   },
   "author": "Matthew Aberham",
   "license": "MIT",
