@@ -23,7 +23,7 @@ const styles = theme => ({
     minHeight: 'calc(100vh - 70px)',
     position: 'relative',
     paddingTop: theme.spacing.unit * 10,
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '100vw',
       paddingTop: theme.spacing.unit * 3,
       flexDirection: 'column-reverse',
@@ -34,7 +34,7 @@ const styles = theme => ({
   },
   Column: {
     ...theme.mixins.gutters({}),
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       width: '100vw',
       marginBottom: theme.spacing.unit * 3
     },

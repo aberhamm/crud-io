@@ -40,6 +40,7 @@ const styles = theme => ({
     justifyContent: 'center',
     paddingLeft: theme.mixins.gutters({}).paddingLeft * 3,
     paddingRight: theme.mixins.gutters({}).paddingRight * 3,
+    flex: 0,
     '&:last-child': {
       borderLeft: '1px solid grey'
     },
@@ -50,7 +51,7 @@ const styles = theme => ({
         borderLeft: 0
       }
     }
-  }
+  },
 });
 
 class Authenticate extends PureComponent {

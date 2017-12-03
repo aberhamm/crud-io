@@ -42,7 +42,6 @@ const styles = theme => ({
 class MenuAppBar extends PureComponent {
   static propTypes = {
     classes: PropTypes.object.isRequired,
-    locationKey: PropTypes.string.isRequired,
     session: PropTypes.bool.isRequired,
     signOut: PropTypes.func,
     user: PropTypes.object
