@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npm run build && node index.js",
+    "start": "node index.js",
+    "run-local": "npm run build && node index.js",
     "build": "webpack --config ./webpack.production.config.js --progress --profile --colors",
     "watch": "webpack --progress --profile --colors",
     "watch-server": "nodemon --use-strict index.js",
