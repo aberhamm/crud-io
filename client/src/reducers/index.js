@@ -34,7 +34,7 @@ const donations = (state = defaultState.donations, action) => {
     case types.LOGIN_SUCCESS:
       return action.payload.donations;
     case types.DONATION_SUCCESS:
-      return [...state, action.payload ];
+      return [...state, action.payload.donation ];
     case types.DONATIONS_RETRIEVED:
       return action.payload;
     default:

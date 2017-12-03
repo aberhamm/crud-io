@@ -86,7 +86,7 @@ router.post('/donations', (req, res) => {
     User.update({ _id: userId }, { $push: { donations: savedDonation._id } }, (err) => {
       if (err) return res.status(501).json({ success: false, error: err });
 
-      global.socketIO.sockets.emit('donate', savedDonation);
+      global.socketIO.sockets.emit('donate', { donation: savedDonation });
 
       return res.status(200).json({
         success: true,

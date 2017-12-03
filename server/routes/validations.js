@@ -10,7 +10,7 @@ exports.validateDonationForm = (payload = {}) => {
     errors.organization = 'Please provide a valid organization.';
   }
 
-  if (typeof payload.amount !== 'string' || !validator.isInt(payload.amount)) {
+  if (typeof payload.amount !== 'string' || !validator.isNumeric(payload.amount)) {
     isFormValid = false;
     errors.amount = 'Please provide a valid amount.';
   }
