@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import {
-  Grid,
-  Typography
+  Grid
 } from 'material-ui';
 
 import {
@@ -15,7 +15,7 @@ import SignInForm from '../components/SignInForm';
 import SignUpForm from '../components/SignUpForm';
 
 const styles = theme => ({
-  root: {
+  Root: {
     display: 'flex',
     flexGrow: 1,
     height: 'calc(100vh - 80px)',
@@ -23,40 +23,41 @@ const styles = theme => ({
     alignItems: 'center',
     ...theme.mixins.gutters({}),
   },
-  content: {
+  Forms__container: {
     height: '50vh',
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'stretch',
-    '&>:last-child': {
-      borderLeft: '1px solid grey'
-    },
     [theme.breakpoints.down('md')]: {
       height: 'auto',
-      flexDirection: 'column',
-      '&>:last-child': {
-        borderLeft: 0
-      },
+      flexDirection: 'column'
     }
   },
 
-  formContainer: {
+  Forms__formContainer: {
     display: 'flex',
     justifyContent: 'center',
     paddingLeft: theme.mixins.gutters({}).paddingLeft * 3,
     paddingRight: theme.mixins.gutters({}).paddingRight * 3,
+    '&:last-child': {
+      borderLeft: '1px solid grey'
+    },
     [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing.unit * 4,
-      ...theme.mixins.gutters({})
+      ...theme.mixins.gutters({}),
+      '&:last-child': {
+        borderLeft: 0
+      }
     }
   }
 });
 
-class Authenticate extends Component {
-  state = {
-    licensee: 'MyArea Network'
-  };
+class Authenticate extends PureComponent {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    session: PropTypes.bool.isRequired
+  }
 
   render() {
     const { classes, session } = this.props;
@@ -67,12 +68,12 @@ class Authenticate extends Component {
       );
     }
     return (
-      <Grid container spacing={40} className={classes.root}>
-        <Grid item xs={12} className={classes.content}>
-          <Grid item xs={12} md={4} className={classes.formContainer}>
+      <Grid container spacing={40} className={classes.Root}>
+        <Grid item xs={12} className={classes.Forms__container}>
+          <Grid item xs={12} md={4} className={classes.Forms__formContainer}>
             <SignUpForm />
           </Grid>
-          <Grid item xs={12} md={4} className={classes.formContainer}>
+          <Grid item xs={12} md={4} className={classes.Forms__formContainer}>
             <SignInForm />
           </Grid>
         </Grid>
@@ -83,13 +84,8 @@ class Authenticate extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user,
     session: state.session
   };
 };
 
-const mapDispatchToProps = (/* dispatch */) => {
-  return { };
-};
-
-export default compose(connect(mapStateToProps, mapDispatchToProps), withStyles(styles))(Authenticate);
+export default compose(connect(mapStateToProps), withStyles(styles))(Authenticate);

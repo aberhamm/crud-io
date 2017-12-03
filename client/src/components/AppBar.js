@@ -9,6 +9,8 @@ import {
   Toolbar
 } from 'material-ui';
 
+import { history } from '../store/configureStore';
+
 import SideNavToggle from './AppBar/SideNavToggle';
 import CurrentUserBadge from './AppBar/CurrentUserBadge';
 import AppBarLink from './AppBar/AppBarLink';
@@ -38,17 +40,26 @@ const styles = theme => ({
 });
 
 class MenuAppBar extends PureComponent {
-  shouldComponentUpdate(nextProps) {
-    const { locationKey, user, signOut } = this.props;
-    return (nextProps.locationKey !== locationKey) || (nextProps.user.name !== user.name);
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    locationKey: PropTypes.string.isRequired,
+    session: PropTypes.bool.isRequired,
+    signOut: PropTypes.func,
+    user: PropTypes.object
   }
+
+  shouldComponentUpdate(nextProps) {
+    const { locationKey, user, session } = this.props;
+    return (nextProps.locationKey !== locationKey) || (nextProps.user.name !== user.name) || (nextProps.session !== session);
+  }
+
   render() {
-    const { classes, user, session } = this.props;
+    const { classes, user, session, signOut } = this.props;
     return (
       <Grid container className={classes.Root}>
         <Grid item xs={12}>
-        <AppBar className={classes.appBar} position="static" color="inherit" elevation={1}>
-          <Toolbar disableGutters={false}>
+        <AppBar position="static" color="inherit" elevation={1}>
+          <Toolbar>
             <Grid container spacing={24}>
               <Grid item xs={3} hidden={{ mdUp: true }}>
                 { session ? <SideNavToggle /> : null }
@@ -63,7 +74,7 @@ class MenuAppBar extends PureComponent {
                   <AppBarLink to="/dashboard" label="Dashboard" />
                   <AppBarLink to="/my-donations" label="My Donations" />
                   <AppBarLink to="/profile" label="Edit Profile" />
-                  <CurrentUserBadge user={user} signOutUser={signOutUser} />
+                  <CurrentUserBadge user={user} signOutUser={signOut} />
                 </div> }
               </Grid>
             </Grid>
@@ -75,10 +86,6 @@ class MenuAppBar extends PureComponent {
   }
 }
 
-MenuAppBar.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
 const mapStateToProps = (state) => {
   return {
     locationKey: state.routing.location.key,
@@ -89,7 +96,10 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    signOut: () => dispatch(signOutUser())
+    signOut: () => {
+      dispatch(signOutUser());
+      history.push('/authenticate');
+    }
   };
 };
 

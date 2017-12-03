@@ -1,16 +1,10 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import {
-  Grid,
-  FormControl,
-  InputLabel,
-  Input,
-  FormHelperText,
-  Button,
-  Typography
+  Grid
 } from 'material-ui';
 import Form from './Form';
 import { loginUser } from '../actions';
@@ -28,17 +22,23 @@ const styles = theme => ({
   }
 });
 
-class SignInForm extends Component {
+class SignInForm extends PureComponent {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    errors: PropTypes.object,
+    message: PropTypes.string
+  }
+
   state = {
     email: '',
     password: ''
-  };
+  }
 
   handleChange = prop => event => {
     this.setState({
       [prop]: event.target.value
     });
-  };
+  }
 
   processForm = () => {
     this.props.loginUser(this.state);
@@ -61,12 +61,12 @@ class SignInForm extends Component {
               fields={[{
                 key: 'email',
                 type: 'text',
-                value: this.state.email,
+                value: email,
                 title: 'Email'
               }, {
                 key: 'password',
                 type: 'password',
-                value: this.state.password,
+                value: password,
                 title: 'Password'
               }]}
             />

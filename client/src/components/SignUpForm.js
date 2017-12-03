@@ -1,21 +1,15 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import {
-  Grid,
-  FormControl,
-  InputLabel,
-  Input,
-  FormHelperText,
-  Button,
-  Typography
+  Grid
 } from 'material-ui';
 
 import Form from './Form';
 
-import { registerUser } from '../actions';
+import { registerUser, formFieldChange } from '../actions';
 
 const styles = theme => ({
   Root: {
@@ -30,25 +24,42 @@ const styles = theme => ({
   }
 });
 
-class SignUpForm extends Component {
+class SignUpForm extends PureComponent {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    success: PropTypes.bool,
+    message: PropTypes.string,
+    errors: PropTypes.object
+  }
+
   state = {
     email: '',
     name: '',
     password: ''
-  };
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    if (!this.props.success && nextProps.success) {
+      this.setState({
+        email: '',
+        name: '',
+        password: ''
+      });
+    }
+  }
 
   handleChange = prop => event => {
     this.setState({
       [prop]: event.target.value
     });
-  };
+  }
 
   processForm = () => {
     this.props.registerUser(this.state);
   }
 
   render() {
-    const { classes, errors, message } = this.props;
+    const { classes, errors, message, success} = this.props;
     const { email, name, password } = this.state;
 
     return (
@@ -60,22 +71,23 @@ class SignUpForm extends Component {
               buttonText="Sign Up"
               handleSubmit={this.processForm}
               handleChange={this.handleChange}
+              success={success}
               message={message}
               errors={errors}
               fields={[{
                 key: 'email',
                 type: 'text',
-                value: this.state.email,
+                value: email,
                 title: 'Email'
               }, {
                 key: 'password',
                 type: 'password',
-                value: this.state.password,
+                value: password,
                 title: 'Password'
               }, {
                 key: 'name',
                 type: 'text',
-                value: this.state.name,
+                value: name,
                 title: 'Name'
               }]}
             />
@@ -86,22 +98,14 @@ class SignUpForm extends Component {
   }
 }
 
-SignUpForm.propTypes = {
-  classes: PropTypes.object.isRequired,
-  message: PropTypes.string,
-  errors: PropTypes.object
-};
-
 const mapStateToProps = (state) => {
-  return {
-    message: state.form.register.message,
-    errors: state.form.register.errors || {}
-  };
+  return state.form.register;
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     registerUser: credentials => dispatch(registerUser(credentials)),
+    formFieldChange: data => dispatch(formFieldChange(data))
   };
 };
 

@@ -4,12 +4,12 @@ import { withStyles } from 'material-ui/styles';
 import { Typography } from 'material-ui';
 
 const styles = theme => ({
-  link: {
+  NavLink: {
     textDecoration: 'none',
-    color: theme.palette.common.fontPrimary,
+    color: theme.palette.common.black,
     fontWeight: 400,
   },
-  activeLink: {
+  NavLink_active: {
     fontWeight: 600,
   },
 });
@@ -21,7 +21,7 @@ const AppBarLink = ({ classes, label, to, activeOnlyWhenExact }) => (
       type="subheading"
       color="inherit"
     >
-      <Link to={to} className={`${classes.link} ${match ? classes.activeLink : ''}`}>{label}</Link>
+      <Link to={to} className={`${classes.NavLink} ${match ? classes.NavLink_active : ''}`}>{label}</Link>
     </Typography>
   )}/>
 );

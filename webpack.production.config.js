@@ -11,10 +11,13 @@ module.exports = {
     path: path.join(__dirname, '/server/static/js'),
     filename: 'app.js',
   },
-  resolve: {
-    extensions: ['.js', '.jsx']
-  },
   plugins: [
+    new webpack.optimize.UglifyJsPlugin({
+      compressor: {
+        warnings: false,
+        screw_ie8: true
+      }
+    }),
     new CompressionPlugin({
       asset: "[path].gz",
       algorithm: "gzip",
@@ -23,6 +26,9 @@ module.exports = {
       minRatio: 0.8
     })
   ],
+  resolve: {
+    extensions: ['.js', '.jsx']
+  },
   module: {
     loaders: [
       {
@@ -45,7 +51,5 @@ module.exports = {
         loader: 'file'
       }
     ]
-  },
-  // start Webpack in a watch mode, so Webpack will rebuild the bundle on changes
-  watch: true
+  }
 };

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {
@@ -11,31 +11,35 @@ import MenuIcon from 'material-ui-icons/Menu';
 import SideNavLink from './SideNavLink';
 
 const styles = {
-  list: {
+  NavList__container: {
     width: 250,
   },
-  menuButton: {
+  ToggleButton: {
     marginLeft: -12,
     marginRight: 20,
   },
 };
 
-class SideNavToggle extends React.Component {
+class SideNavToggle extends PureComponent {
+  static propTypes = {
+    classes: PropTypes.object.isRequired
+  }
+
   state = {
     open: false
-  };
+  }
 
   toggleDrawer = (open) => () => {
     this.setState({
       open
     });
-  };
+  }
 
   render() {
     const { classes } = this.props;
 
     const navList = (
-      <div className={classes.list}>
+      <div className={classes.NavList__container}>
         <List>
           <ListItem>
             <SideNavLink to="/dashboard" label="Dashboard" />
@@ -52,7 +56,7 @@ class SideNavToggle extends React.Component {
 
     return (
       <div>
-        <IconButton onClick={this.toggleDrawer(true)} className={classes.menuButton} aria-label="Menu">
+        <IconButton onClick={this.toggleDrawer(true)} className={classes.ToggleButton} aria-label="Menu">
           <MenuIcon />
         </IconButton>
         <Drawer open={this.state.open} onRequestClose={this.toggleDrawer(false)}>
@@ -69,9 +73,5 @@ class SideNavToggle extends React.Component {
     );
   }
 }
-
-SideNavToggle.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
 
 export default withStyles(styles)(SideNavToggle);

@@ -1,8 +1,9 @@
+export const CLEAR_FORM = 'CLEAR_FORM';
 export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
 export const LOGIN_FAIL = 'LOGIN_FAIL';
 export const REGISTER_SUCCESS = 'REGISTER_SUCCESS';
 export const REGISTER_FAIL = 'REGISTER_FAIL';
-export const SIGN_OUT_USER = 'LOGOUT_USER';
+export const SIGN_OUT_USER = 'SIGN_OUT_USER';
 export const USER_UPDATED = 'USER_UPDATED';
 export const USER_UPDATE_FAIL = 'USER_UPDATE_FAIL';
 export const DONATION_SUCCESS = 'DONATION_SUCCESS';

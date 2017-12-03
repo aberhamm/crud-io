@@ -16,6 +16,12 @@ const styles = theme => ({
     display: 'flex',
     flexGrow: 1
   },
+  Form__message_success: {
+    color: theme.palette.common.green
+  },
+  Form__message_error: {
+    color: theme.palette.common.red
+  },
   FormField__container: {
     marginTop: theme.spacing.unit
   },
@@ -26,13 +32,39 @@ const styles = theme => ({
 });
 
 class Form extends Component {
+  static propTypes = {
+    buttonText: PropTypes.string.isRequired,
+    classes: PropTypes.object.isRequired,
+    errors: PropTypes.object,
+    fields: PropTypes.array.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    message: PropTypes.string,
+    success: PropTypes.bool,
+    title: PropTypes.string.isRequired
+  }
+
+  static defaultProps = {
+    errors: {},
+    fields: []
+  }
+
   processForm = event => {
     event.preventDefault();
     this.props.handleSubmit();
   }
 
   render() {
-    const { classes, errors, message, fields, handleChange, title, buttonText } = this.props;
+    const {
+      buttonText,
+      classes,
+      errors,
+      fields,
+      handleChange,
+      message,
+      success,
+      title
+    } = this.props;
+
     return (
       <div className={classes.Root}>
         <Grid container spacing={24}>
@@ -42,7 +74,14 @@ class Form extends Component {
                 { title }
               </Typography>
 
-              { message && <Typography gutterBottom color="error">{message}</Typography> }
+              {
+                message &&
+                <Typography
+                  gutterBottom
+                  className={success ? classes.Form__message_success : classes.Form__message_error}>
+                  {message}
+                </Typography>
+              }
 
               { fields.map((field, i) => (
                 <FormControl fullWidth key={field + i} className={classes.FormField__container} error={!!errors[field.key]}>
@@ -67,11 +106,5 @@ class Form extends Component {
     );
   }
 }
-
-Form.propTypes = {
-  classes: PropTypes.object.isRequired,
-  message: PropTypes.string,
-  errors: PropTypes.object
-};
 
 export default withStyles(styles)(Form);

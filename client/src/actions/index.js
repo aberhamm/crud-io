@@ -1,5 +1,14 @@
+/* eslint no-console: 0 */
+
 import Api from '../lib/api';
 import * as types from './types';
+
+export function clearForm(payload) {
+  return {
+    type: types.CLEAR_FORM,
+    payload
+  };
+}
 
 export function loginSuccess(payload) {
   return {
@@ -30,7 +39,7 @@ export function registerFail(payload) {
 }
 
 export function signOutUser() {
-  localStorage.clear();
+  localStorage.setItem('auth_token', '');
   return {
     type: types.SIGN_OUT_USER
   };
@@ -89,24 +98,12 @@ export function registerUser(user) {
   return (dispatch) => {
     Api.register(user).then(resp => {
       if (resp.success) {
-        console.log({resp});
+        dispatch(registerSuccess(resp));
       } else {
         dispatch(registerFail(resp));
       }
     })
     .catch(err => dispatch(loginFail(err)));
-  };
-}
-
-export function getDashboard() {
-  return dispatch => {
-    Api.getDashboard().then(resp => {
-      console.log(resp);
-    })
-    .catch(err => {
-      // TODO: handle errors
-      console.log(err);
-    });
   };
 }
 
@@ -116,7 +113,7 @@ export function updateCurrentUser(user) {
       if (resp.success) {
         const cachedUser = JSON.parse(localStorage.getItem('user'));
         localStorage.setItem('user', JSON.stringify({...cachedUser, ...resp.user}));
-        dispatch(userUpdated(resp.user));
+        dispatch(userUpdated(resp));
       } else {
         dispatch(userUpdateFail(resp));
       }
@@ -132,7 +129,7 @@ export function createDonation(donation) {
   return (dispatch) => {
     Api.postDonation(donation).then(resp => {
       if (resp.success) {
-        dispatch(donationSuccess(resp.donation));
+        dispatch(donationSuccess(resp));
       } else {
         dispatch(donationFail(resp));
       }

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import { Tooltip } from 'material-ui';
 import {
@@ -9,25 +10,32 @@ import {
 } from 'material-ui/Table';
 
 const headerStyles = theme => ({
-  root: {
-    backgroundColor: theme.palette.common.tableSubheader,
+  Root: {
+    backgroundColor: theme.palette.primary.A400,
     color: theme.palette.common.white,
   },
-  tableSort: {
+  TableSort__label: {
     color: theme.palette.common.white + '!important',
   },
 });
 
-class DataTableHead extends React.Component {
+class DataTableHead extends PureComponent {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    order: PropTypes.string.isRequired,
+    orderBy: PropTypes.string.isRequired,
+    columns: PropTypes.array.isRequired
+  }
+
   createSortHandler = property => event => {
     this.props.onRequestSort(event, property);
-  };
+  }
 
   render() {
     const { classes, order, orderBy, columns } = this.props;
 
     return (
-      <TableHead className={classes.root}>
+      <TableHead className={classes.Root}>
         <TableRow>
           {columns.map(column => {
             return (
@@ -47,11 +55,11 @@ class DataTableHead extends React.Component {
                     direction={order}
                     onClick={this.createSortHandler(column.id)}
                     classes={{
-                      root: classes.tableSort,
-                      active: classes.tableSort,
-                      icon: classes.tableSort,
-                      desc: classes.tableSort,
-                      asc: classes.tableSort
+                      root: classes.TableSort__label,
+                      active: classes.TableSort__label,
+                      icon: classes.TableSort__label,
+                      desc: classes.TableSort__label,
+                      asc: classes.TableSort__label
                     }}
                   >
                     {column.label}

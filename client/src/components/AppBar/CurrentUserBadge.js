@@ -1,4 +1,5 @@
-import React, { PureComponent} from 'react';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
 import {
   IconButton,
@@ -27,7 +28,7 @@ const styles = theme => ({
       alignSelf: 'center'
     }
   },
-  userMeta: {
+  UserMeta: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
@@ -35,24 +36,29 @@ const styles = theme => ({
     color: theme.palette.common.lightBlack,
     fontSize: 12
   },
-  button: {
+  Toggle__button: {
     color: theme.palette.text.lightBlack
   }
 });
 
 class CurrentUserBadge extends PureComponent {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    user: PropTypes.object
+  }
+
   state = {
-    anchorEl: null,
-  };
+    anchorEl: null
+  }
 
   handleMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
-  };
+  }
 
   handleSignOutClick = () => {
     this.setState({ anchorEl: null });
     this.props.signOutUser();
-  };
+  }
 
   render() {
     const { classes, user } = this.props;
@@ -65,11 +71,11 @@ class CurrentUserBadge extends PureComponent {
           aria-owns={open ? 'menu-appbar' : null}
           aria-haspopup="true"
           onClick={this.handleMenu}
-          className={classes.button}
+          className={classes.Toggle__button}
         >
           <AccountCircle />
         </IconButton>
-        <div className={classes.userMeta}>
+        <div className={classes.UserMeta}>
           <Typography type="body2" align="center">
              Welcome, {user.name}
           </Typography>

@@ -15,14 +15,13 @@ const defaultState = {
 };
 
 const user = (state = defaultState.user, action) => {
-  console.log(action);
   switch(action.type) {
     case types.LOGIN_SUCCESS:
       return {...defaultState.user, ...action.payload };
     case types.SIGN_OUT_USER:
       return defaultState.user;
     case types.USER_UPDATED:
-      return {...defaultState.user, ...action.payload };
+      return {...state, ...action.payload.user };
     case types.DONATION_SUCCESS:
       return {...state, ...action.payload };
     default:
@@ -31,12 +30,11 @@ const user = (state = defaultState.user, action) => {
 };
 
 const donations = (state = defaultState.donations, action) => {
-  console.log(action);
   switch(action.type) {
     case types.LOGIN_SUCCESS:
       return action.payload.donations;
     case types.DONATION_SUCCESS:
-      return [...state, action.payload ];
+      return [...state, action.payload.donation ];
     case types.DONATIONS_RETRIEVED:
       return action.payload;
     default:
@@ -62,15 +60,19 @@ const form = (state = defaultState.form, action) => {
     case types.LOGIN_FAIL:
       return { ...state, login: { ...action.payload } };
     case types.REGISTER_SUCCESS:
-      return { ...state, register: { } };
+      return { ...state, register: { ...action.payload } };
     case types.REGISTER_FAIL:
       return { ...state, register: { ...action.payload } };
+    case types.USER_UPDATED:
+      return { ...state, updateUser: { ...action.payload } };
     case types.USER_UPDATE_FAIL:
       return { ...state, updateUser: { ...action.payload } };
     case types.DONATION_FAIL:
       return { ...state, donate: { ...action.payload } };
     case types.DONATION_SUCCESS:
-      return { ...state, donate: {} };
+      return { ...state, donate: { ...action.payload } };
+    case types.CLEAR_FORM:
+      return { ...state, [action.payload]: {} };
     default:
       return state;
   }

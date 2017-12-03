@@ -1,18 +1,16 @@
 import React, { PureComponent } from 'react';
-import io from 'socket.io-client';
+import PropTypes from 'prop-types';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
 import {
   Grid,
   Paper,
-  Typography,
-  Button
 } from 'material-ui';
 import DataTable from '../components/DataTable';
 import DonationForm from '../components/DonationForm';
 
-import { retrieveAllDonations, createDonation } from '../actions';
+import { retrieveAllDonations } from '../actions';
 
 const columns = [
   { id: 'organization', numeric: false, disablePadding: false, label: 'Organization' },
@@ -21,25 +19,40 @@ const columns = [
 
 const styles = theme => ({
   Root: theme.mixins.gutters({
+    display: 'flex',
     minHeight: 'calc(100vh - 70px)',
     position: 'relative',
-    paddingTop: theme.spacing.unit * 10
+    paddingTop: theme.spacing.unit * 10,
+    [theme.breakpoints.down('sm')]: {
+      width: '100vw',
+      paddingTop: theme.spacing.unit * 3,
+      flexDirection: 'column-reverse',
+    },
   }),
   Form__container: {
     padding: theme.spacing.unit * 4
+  },
+  Column: {
+    ...theme.mixins.gutters({}),
+    [theme.breakpoints.down('sm')]: {
+      width: '100vw',
+      marginBottom: theme.spacing.unit * 3
+    },
   }
 });
 
 class MyDonations extends PureComponent {
-  state = {
-
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    donations: PropTypes.array,
+    retrieveAllDonations: PropTypes.func.isRequired
   }
 
   componentWillMount() {
     this.props.retrieveAllDonations();
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     return this.props.donations.length !== nextProps.donations.length;
   }
 
@@ -47,12 +60,12 @@ class MyDonations extends PureComponent {
     const { classes, donations } = this.props;
 
     return (
-      <Grid container spacing={40} className={classes.Root}>
-        <Grid item xs={8}>
+      <Grid container spacing={0} className={classes.Root}>
+        <Grid item xs={12} md={8} className={classes.Column}>
           <DataTable title="My Donations" columns={columns} data={donations} />
         </Grid>
 
-        <Grid item xs={4}>
+        <Grid item xs={12} md={4} className={classes.Column}>
           <Paper elevation={4} className={classes.Form__container}>
             <DonationForm />
           </Paper>
@@ -63,7 +76,6 @@ class MyDonations extends PureComponent {
 }
 
 const mapStateToProps = (state) => {
-  console.log(state.donations);
   return {
     donations: state.donations.filter(d => (d.user === state.user.id))
   };

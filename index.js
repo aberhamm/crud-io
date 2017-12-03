@@ -1,25 +1,16 @@
 const express = require('express');
 const bodyParser = require('body-parser');
-const cookieParser = require('cookie-parser');
-const session = require('cookie-session')
 const passport = require('passport');
 const config = require('./config');
 const socket = require('socket.io');
+const expressStaticGzip = require("express-static-gzip");
 
 // connect to the database and load models
 require('./server/models').connect(config.dbUri);
 
 const app = express();
 
-app.use(express.static('./server/static/'));
-app.use(express.static('./client/dist/'));
-
-app.use(cookieParser());
-app.use(session({
-  secret: 'supersecret',
-  resave: false,
-  saveUninitialized: true
-}));
+app.use('/', expressStaticGzip('./server/static/'));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -41,9 +32,10 @@ const authRoutes = require('./server/routes/auth');
 const apiRoutes = require('./server/routes/api');
 app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
+
 app.get("/*", function(req, res) {
   res.sendFile(__dirname + '/server/static/index.html')
-})
+});
 
 const port = process.env.PORT || 3000;
 
@@ -55,7 +47,7 @@ const io = socket(server);
 io.on('connection', socket => {
   socket.on('donate', (data) => {
     socket.broadcast.emit('donate', data);
-  })
+  });
 });
 
 global.socketIO = io;

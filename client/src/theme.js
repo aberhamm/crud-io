@@ -7,32 +7,9 @@ const theme = createMuiTheme({
       'black': '#000',
       'white': '#fff',
       'lightGrey': '#F2F2F2',
-      'blue': 'rgb(32, 187, 252)',
       'transparent': 'rgba(0, 0, 0, 0)',
-      'buttonPrimaryActive': 'rgba(32, 187, 252, .8)',
-      'buttonPrimaryInactive': 'rgba(32, 187, 252, 1)',
-      'buttonSecondaryActive': '#808080',
-      'buttonSecondaryInactive': '#BCBCBC',
-      'buttonDarkActive': '#333333',
-      'buttonDarkInactive': '#5C5C5C',
-      'fontPrimary': '#4D4D4D',
-      'fontLicensee': '#049FD8',
-      'tableHeader': '#00BAFF',
-      'tableSubheader':	'#049FD8',
-      'tableDivider': '#E8E8E8',
-      'tableBackground': '#fff',
-      'pieChartComplete': '#049FD8',
-      'pieChartIncomplete': '#97A0A2',
-      'menuHeader': '#7C7C7C',
-      'menuHeaderText': '#8E8E8E',
-      'menuBackground': '#fff',
-      'menuDivider': '#E8E8E8',
-      'filterHeader': '#7C7C7C',
-      'filterBackground': '#526166',
-      'radioBorder': '#7C7C7C',
-      'radioActive': '#049FD8',
-      'apiKeyBackground': '#F2F2F2',
-      'apiKeyBorder': '#7C7C7C',
+      'green': '#2ecc71',
+      'red': '#e74c3c'
     },
     'type': 'light',
     'primary': {
@@ -346,12 +323,6 @@ const theme = createMuiTheme({
         'color': '#000'
       }
     }
-    // 'MuiGrid': {
-    //   'typeContainer': {
-    //     'paddingLeft': 100,
-    //     'paddingRight': 100
-    //   }
-    // }
   },
   'transitions': {
     'easing': {

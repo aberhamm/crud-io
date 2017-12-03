@@ -1,16 +1,13 @@
 import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import io from 'socket.io-client';
 import { compose } from 'recompose';
 import { connect } from 'react-redux';
 import { withStyles } from 'material-ui/styles';
 import {
-  Grid,
-  Paper,
-  Typography,
-  Button
+  Grid
 } from 'material-ui';
 import DataTable from '../components/DataTable';
-import DonationForm from '../components/DonationForm';
 
 import { retrieveAllDonations, donationSuccess } from '../actions';
 
@@ -23,16 +20,19 @@ const styles = theme => ({
   Root: theme.mixins.gutters({
     minHeight: 'calc(100vh - 70px)',
     position: 'relative',
-    paddingTop: theme.spacing.unit * 10
-  }),
-  Form__container: {
-    padding: theme.spacing.unit * 4
-  }
+    paddingTop: theme.spacing.unit * 10,
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: theme.spacing.unit * 3
+    },
+  })
 });
 
 class Dashboard extends PureComponent {
-  state = {
-
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    donations: PropTypes.array,
+    donationSuccess: PropTypes.func.isRequired,
+    retrieveAllDonations: PropTypes.func.isRequired,
   }
 
   componentWillMount() {
@@ -44,8 +44,12 @@ class Dashboard extends PureComponent {
     this.socket.on('donate', donation => this.props.donationSuccess(donation));
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
+  shouldComponentUpdate(nextProps) {
     return this.props.donations.length !== nextProps.donations.length;
+  }
+
+  componentWillUnmount() {
+    this.socket.disconnect();
   }
 
   render() {

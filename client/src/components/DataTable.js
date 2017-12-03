@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import { withStyles } from 'material-ui/styles';
-import keycode from 'keycode';
 import { Table, Paper } from 'material-ui';
 import {
   TableBody,
@@ -13,26 +13,25 @@ import DataTableToolbar from './DataTable/DataTableToolbar';
 import DataTableHead from './DataTable/DataTableHead';
 
 const createData = (row) => {
-  return { id: row._id, organization: row.organization, amount: row.amount, createdAt: row.createdAt };
+  // Put data in order
+  return { id: row._id, user: row.user, organization: row.organization, amount: row.amount, createdAt: row.createdAt, ...row };
 };
 
-const styles = theme => ({
-  root: {
+const styles = () => ({
+  Root: {
     width: '100%',
-  },
-  table: {
-    minWidth: 800,
-  },
-  tableWrapper: {
-    overflowX: 'auto',
-  },
-  tableRow: {
-    cursor: 'pointer'
   }
 });
 
-class DataTable extends React.Component {
-  state ={
+class DataTable extends Component {
+  static propTypes = {
+    classes: PropTypes.object.isRequired,
+    columns: PropTypes.array.isRequired,
+    data: PropTypes.array,
+    title: PropTypes.string.isRequired
+  }
+
+  state = {
     order: 'desc',
     orderBy: 'createdAt',
     data: this.props.data.map(createData),
@@ -68,81 +67,57 @@ class DataTable extends React.Component {
         : this.state.data.sort((a, b) => (a[orderBy] < b[orderBy] ? -1 : 1));
 
     this.setState({ data, order, orderBy });
-  };
-
-  handleClick = (event, id) => {
-    const { selected } = this.state;
-    const selectedIndex = selected.indexOf(id);
-    let newSelected = [];
-
-    if (selectedIndex === -1) {
-      newSelected = newSelected.concat(selected, id);
-    } else if (selectedIndex === 0) {
-      newSelected = newSelected.concat(selected.slice(1));
-    } else if (selectedIndex === selected.length - 1) {
-      newSelected = newSelected.concat(selected.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelected = newSelected.concat(
-        selected.slice(0, selectedIndex),
-        selected.slice(selectedIndex + 1),
-      );
-    }
-
-    this.setState({ selected: newSelected });
-  };
+  }
 
   handleChangePage = (event, page) => {
     this.setState({ page });
-  };
+  }
 
   handleChangeRowsPerPage = event => {
     this.setState({ rowsPerPage: event.target.value });
-  };
+  }
 
   render() {
     const { classes, columns, title } = this.props;
-    const { data, order, orderBy, selected, rowsPerPage, page } = this.state;
+    const { data, order, orderBy, rowsPerPage, page } = this.state;
     const specifiedColumns = columns.map(c => c.id);
 
     return (
-      <Paper className={classes.root}>
+      <Paper className={classes.Root}>
         <DataTableToolbar title={title} handleFilter={this.handleLocationFilter} />
-        <div className={classes.tableWrapper}>
-          <Table className={classes.table}>
-            <DataTableHead
-              columns={columns}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={this.handleRequestSort}
-              rowCount={data.length}
-            />
-            <TableBody>
-              {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
-                return (
-                  <TableRow
-                    hover
-                    tabIndex={-1}
-                    key={row.id}
-                    className={classes.tableRow}
-                  >
-                    { Object.entries(row).map(([key, value]) => specifiedColumns.indexOf(key) > -1 && <TableCell key={key}>{value}</TableCell>) }
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-            <TableFooter>
-              <TableRow>
-                <TablePagination
-                  count={data.length}
-                  rowsPerPage={rowsPerPage}
-                  page={page}
-                  onChangePage={this.handleChangePage}
-                  onChangeRowsPerPage={this.handleChangeRowsPerPage}
-                />
-              </TableRow>
-            </TableFooter>
-          </Table>
-        </div>
+        <Table className={classes.Table}>
+          <DataTableHead
+            columns={columns}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={this.handleRequestSort}
+            rowCount={data.length}
+          />
+          <TableBody>
+            {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map(row => {
+              return (
+                <TableRow
+                  hover
+                  tabIndex={-1}
+                  key={row.id}
+                >
+                  { Object.entries(row).map(([key, value]) => specifiedColumns.indexOf(key) > -1 && <TableCell key={key}>{value}</TableCell>) }
+                </TableRow>
+              );
+            })}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TablePagination
+                count={data.length}
+                rowsPerPage={rowsPerPage}
+                page={page}
+                onChangePage={this.handleChangePage}
+                onChangeRowsPerPage={this.handleChangeRowsPerPage}
+              />
+            </TableRow>
+          </TableFooter>
+        </Table>
       </Paper>
     );
   }

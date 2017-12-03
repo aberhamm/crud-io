@@ -6,12 +6,6 @@ const router = new express.Router();
 const User = mongoose.model('User');
 const Donation = mongoose.model('Donation');
 
-router.get('/dashboard', (req, res) => {
-  res.status(200).json({
-    message: "You're authorized to see this secret message."
-  });
-});
-
 router.get('/users/:id', (req, res) => {
   User.findOne({ _id: req.params.id }).select('-password').populate('donations').exec((err, user) => {
     if (err) {
@@ -31,7 +25,7 @@ router.get('/users/:id/donations', (req, res) => {
 });
 
 router.put('/users/:id', (req, res) => {
-  const validationResult = validateDonationForm(req.body);
+  const validationResult = validateEditProfileForm(req.body);
 
   if (!validationResult.success) {
     return res.status(400).json({
@@ -50,7 +44,11 @@ router.put('/users/:id', (req, res) => {
     if (err) {
       return res.status(501).json({ success: false, error: err });
     }
-    return res.status(200).json({ success: true, user: { email: doc.email, name: doc.name }});
+    return res.status(200).json({
+      success: true,
+      message: 'You have successfully updated your profile!',
+      user: { email: doc.email, name: doc.name }
+    });
   });
 });
 
@@ -90,7 +88,11 @@ router.post('/donations', (req, res) => {
 
       global.socketIO.sockets.emit('donate', savedDonation);
 
-      return res.status(200).json({ success: true, donation: savedDonation});
+      return res.status(200).json({
+        success: true,
+        message: 'Thank you for your contribution!',
+        donation: savedDonation
+      });
     });
   });
 });

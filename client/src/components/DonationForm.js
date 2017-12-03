@@ -1,29 +1,50 @@
-import React, { Component } from 'react';
-import { compose } from 'recompose';
+import React, { PureComponent } from 'react';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
-import { withStyles } from 'material-ui/styles';
 
 import Form from '../components/Form';
-import { createDonation } from '../actions';
+import { createDonation, clearForm } from '../actions';
 
-class EditUserForm extends Component {
+class DonationForm extends PureComponent {
+  static propTypes = {
+    success: PropTypes.bool,
+    message: PropTypes.string,
+    errors: PropTypes.object
+  }
+
   state = {
-    amount: this.props.user.amount,
-    organization: this.props.user.organization
-  };
+    amount: '',
+    organization: ''
+  }
+
+  componentWillReceiveProps = (nextProps) => {
+    if (!this.props.success && nextProps.success) {
+      this.setState({
+        amount: '',
+        organization: ''
+      });
+    }
+  }
+
+  componentWillUnmount() {
+    this.props.clearForm('donate');
+  }
 
   handleChange = prop => event => {
+    // Reset form
+    if (this.props.success) this.props.clearForm('donate');
+
     this.setState({
       [prop]: event.target.value
     });
-  };
+  }
 
   processForm = () => {
     this.props.createDonation(this.state);
-  };
+  }
 
   render() {
-    const { errors, message } = this.props;
+    const { errors, message, success } = this.props;
 
     return (
       <Form
@@ -32,6 +53,7 @@ class EditUserForm extends Component {
         handleSubmit={this.processForm}
         handleChange={this.handleChange}
         message={message}
+        success={success}
         errors={errors}
         fields={[{
           key: 'organization',
@@ -49,17 +71,14 @@ class EditUserForm extends Component {
 }
 
 const mapStateToProps = (state) => {
-  return {
-    user: state.user,
-    message: state.form.donate.message,
-    errors: state.form.donate.errors || {}
-  };
+  return state.form.donate;
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
     createDonation: data => dispatch(createDonation(data)),
+    clearForm: formName => dispatch(clearForm(formName))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditUserForm);
+export default connect(mapStateToProps, mapDispatchToProps)(DonationForm);
