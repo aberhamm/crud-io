@@ -31,7 +31,8 @@ const styles = theme => ({
     alignItems: 'stretch',
     [theme.breakpoints.down('md')]: {
       height: 'auto',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      marginTop: 100
     }
   },
 
@@ -40,12 +41,12 @@ const styles = theme => ({
     justifyContent: 'center',
     paddingLeft: theme.mixins.gutters({}).paddingLeft * 3,
     paddingRight: theme.mixins.gutters({}).paddingRight * 3,
-    flex: 0,
     '&:last-child': {
       borderLeft: '1px solid grey'
     },
     [theme.breakpoints.down('md')]: {
       marginTop: theme.spacing.unit * 4,
+      flex: 0,
       ...theme.mixins.gutters({}),
       '&:last-child': {
         borderLeft: 0
@@ -69,7 +70,7 @@ class Authenticate extends PureComponent {
       );
     }
     return (
-      <Grid container spacing={40} className={classes.Root}>
+      <Grid container spacing={0} className={classes.Root}>
         <Grid item xs={12} className={classes.Forms__container}>
           <Grid item xs={12} md={4} className={classes.Forms__formContainer}>
             <SignUpForm />
